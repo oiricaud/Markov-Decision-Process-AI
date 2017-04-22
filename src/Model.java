@@ -137,11 +137,11 @@ public class Model {
         }
         else if(currState.equals("State 7: TU 10a")){
             edges.add("Final State:");
-        }
-        else if(currState.equals("State 2: TU 10p")){
+        } else if (currState.equals("State 8: RU 10a")) {
             edges.add("Final State:");
-        }
-        else if(currState.equals("State 2: TU 10p")){
+        } else if (currState.equals("State 9: RD 10a")) {
+            edges.add("Final State:");
+        } else if (currState.equals("State 10: 10a")) {
             edges.add("Final State:");
         }
 
