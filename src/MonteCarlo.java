@@ -4,9 +4,14 @@
  */
 public class MonteCarlo {
     Model model = new Model();
-    private String [] states = new String[]{"State 1: RU 8p", "State 2: TU 10p", "State 3: RU 10p", "State 4: RD 10p",
-            "State 5: RU 8a", "State 6: RD 8a", "State 7: TU 10a", "State 8: RU 10a",
-            "State 9: RD 10a", "State 10: 10a", "Final State:"};
+    private String[] states = new String[]
+            {
+                    "State 1: Rested, Homework Undone 8p", "State 2: Tired, Homework Undone 10p",
+                    "State 3: Rested, Homework Undone 10p", "State 4: Rested, Homework Done 10p",
+                    "State 5: Rested, Homework Undone 8a", "State 6: Rested, Homework Done 8a",
+                    "State 7: Tired, Homework Undone 10a", "State 8: Rested, Homework Undone 10a",
+                    "State 9: Rested, Homework Done 10a", "State 10: Tired, Homework Done", "Class Begins"
+            };
 
     MonteCarlo() {
         String currState = states[0];
@@ -23,6 +28,7 @@ public class MonteCarlo {
     private void beginEpisode(String currState) {
         String sequenceOfExpierence = "";
         String stateWeShouldTake = "";
+        int reward = 0;
         String tempState = currState;
         while (!tempState.equals("Final State:")) {
 
@@ -32,9 +38,10 @@ public class MonteCarlo {
                 // Obtain probabilities for each neighbor
                 float probability = model.probabilityPickingParticular(tempState);
                 // Check if we have reached a terminal state, if so end
-                if (tempState.equals("State 7: TU 10a") || tempState.equals("State 8: RU 10a")
-                        || tempState.equals("State 9: RD 10a") || tempState.equals("State 10: 10a")) {
-                    System.out.println("Sequence of Agent's experience {" + sequenceOfExpierence + "}");
+                if (tempState.equals("State 7: Tired, Homework Undone 10a") || tempState.equals("State 8: Rested, Homework Undone 10a")
+                        || tempState.equals("State 9: Rested, Homework Done 10a") || tempState.equals("State 10: Tired, Homework Done")) {
+                    System.out.println("Sequence of Agent's experience {" + sequenceOfExpierence + "Final State: " +
+                            "Class Begins }");
                     return;
                 }
                 // Take the neighbor with the highest probability
