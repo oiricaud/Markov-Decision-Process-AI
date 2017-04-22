@@ -23,31 +23,34 @@ public class MonteCarlo {
     private void beginEpisode(String currState) {
         String sequenceOfExpierence = "";
         String stateWeShouldTake = "";
-        if (currState.equals("Final State:")) {
-            return;
-        } else {
-            String tempState = currState;
-            if (model.getNeighbors(tempState).equals("Final State:")) {
-                return;
-            }
-            while (!tempState.equals("Final State:")) {
-                float currProbability = 0;
-                // traverse through all neighbors of current node
-                for (int neighbor = 0; neighbor < model.getNeighbors(tempState).size(); neighbor++) {
-                    // Obtain probabilities for each neighbor
-                    float probability = model.probabilityPickingParticular(states[neighbor]);
-                    // Take the neighbor with the highest probability
-                    if (currProbability < probability) {
-                        currProbability = probability;
-                        stateWeShouldTake = model.getNeighbors(tempState).get(neighbor);
-                        sequenceOfExpierence = sequenceOfExpierence + stateWeShouldTake + ", ";
-                        tempState = stateWeShouldTake;
-                        System.out.println("State we should take is: " + stateWeShouldTake);
-                        System.out.println("Current probability " + currProbability);
-                    }
+        String tempState = currState;
+        while (!tempState.equals("Final State:")) {
+
+            float currProbability = 0;
+            // traverse through all neighbors of current node
+            for (int neighbor = 0; neighbor < model.getNeighbors(tempState).size(); neighbor++) {
+                // Obtain probabilities for each neighbor
+                float probability = model.probabilityPickingParticular(tempState);
+                // Check if we have reached a terminal state, if so end
+                if (tempState.equals("State 7: TU 10a") || tempState.equals("State 8: RU 10a")
+                        || tempState.equals("State 9: RD 10a") || tempState.equals("State 10: 10a")) {
+                    System.out.println("Sequence of Agent's experience {" + sequenceOfExpierence + "}");
+                    return;
                 }
+                // Take the neighbor with the highest probability
+                if (currProbability < probability) {
+                    currProbability = probability;
+                    stateWeShouldTake = model.getNeighbors(tempState).get(neighbor);
+                    sequenceOfExpierence = sequenceOfExpierence + stateWeShouldTake + ", ";
+                    System.out.println("State we should take is: " + stateWeShouldTake);
+                    System.out.println("Current probability " + currProbability);
+                }
+
             }
+
+            tempState = stateWeShouldTake;
+
         }
-        System.out.println("Sequence of Agent's experience {" + sequenceOfExpierence + "}");
+
     }
 }
