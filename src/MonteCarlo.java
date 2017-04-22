@@ -19,7 +19,7 @@ public class MonteCarlo {
      * @param currState recursively keep calling this method until currState has reached the final state
      */
     private void beginEpisode(String currState) {
-        // traverse through the heigh of the tree ln10 = 2.30 about 3
+        String sequenceOfExpierence = "";
         if (currState.equals("Final State:")) {
             return;
         } else {
@@ -33,10 +33,12 @@ public class MonteCarlo {
                     if (currProbability < probability) {
                         currProbability = probability;
                         stateWeShouldTake = states[neighbor];
+                        sequenceOfExpierence = sequenceOfExpierence +   stateWeShouldTake + ", ";
                         System.out.println("Current probability " + currProbability);
                     }
                     System.out.println("State we should take is: " + stateWeShouldTake);
                 }
         }
+        System.out.println("Sequence of Agent's experience {" + sequenceOfExpierence + "}");
     }
 }
