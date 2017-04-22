@@ -17,15 +17,15 @@ public class MonteCarlo {
         String currState = states[0];
         for (int episode = 0; episode < 50; episode++) {
             System.out.print("Episode " + episode + " ");
-            beginEpisode(currState);
-            System.out.println("\n");
+            int currReward = beginEpisode(currState);
+            System.out.println(currReward + "\n");
         }
     }
 
     /**
      * @param currState recursively keep calling this method until currState has reached the final state
      */
-    private void beginEpisode(String currState) {
+    private int beginEpisode(String currState) {
         String sequenceOfExpierence = "";
         String stateWeShouldTake = "";
         int reward = 0;
@@ -42,22 +42,19 @@ public class MonteCarlo {
                         || tempState.equals("State 9: Rested, Homework Done 10a") || tempState.equals("State 10: Tired, Homework Done")) {
                     System.out.println("Sequence of Agent's experience {" + sequenceOfExpierence + "Final State: " +
                             "Class Begins }");
-                    return;
+                    return reward;
                 }
                 // Take the neighbor with the highest probability
-                if (currProbability < probability) {
+                else if (currProbability < probability) {
                     currProbability = probability;
                     stateWeShouldTake = model.getNeighbors(tempState).get(neighbor);
                     sequenceOfExpierence = sequenceOfExpierence + stateWeShouldTake + ", ";
                     System.out.println("State we should take is: " + stateWeShouldTake);
                     System.out.println("Current probability " + currProbability);
                 }
-
             }
-
             tempState = stateWeShouldTake;
-
         }
-
+        return reward;
     }
 }
