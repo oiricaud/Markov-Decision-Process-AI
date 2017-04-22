@@ -11,7 +11,9 @@ public class MonteCarlo {
     MonteCarlo() {
         String currState = states[0];
         for (int episode = 0; episode < 50; episode++) {
+            System.out.print("Episode " + episode + " ");
             beginEpisode(currState);
+            System.out.println("\n");
         }
     }
 
@@ -40,14 +42,12 @@ public class MonteCarlo {
                         stateWeShouldTake = model.getNeighbors(tempState).get(neighbor);
                         sequenceOfExpierence = sequenceOfExpierence + stateWeShouldTake + ", ";
                         tempState = stateWeShouldTake;
+                        System.out.println("State we should take is: " + stateWeShouldTake);
                         System.out.println("Current probability " + currProbability);
                     }
                 }
-
-                System.out.println("State we should take is: " + stateWeShouldTake);
             }
         }
-        System.out.println("State we should take is: " + stateWeShouldTake);
         System.out.println("Sequence of Agent's experience {" + sequenceOfExpierence + "}");
     }
 }
