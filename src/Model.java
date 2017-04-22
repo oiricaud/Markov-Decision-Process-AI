@@ -1,3 +1,5 @@
+import java.util.LinkedList;
+
 /**
  *
  * Created by oscarricaud on 4/21/17.
@@ -7,10 +9,7 @@ public class Model {
     private String experience;
 
     public Model(){
-        String [] states = new String[]{"State 1: RU 8p", "State 2: TU 10p", "State 3: RU 10p", "State 4: RD 10p",
-                                        "State 5: RU 8a", "State 6: RD 8a", "State 7: TU 10a", "State 8: RU 10a",
-                                        "State 9: RD 10a", "State 10: 10a", "Final State: "};
-
+            /*
         Graph graph = new Graph(11);
 
         // State Number, State value
@@ -64,10 +63,10 @@ public class Model {
         // State 10
         graph.addEdge(10, 11, 3); // Source, Destination, Weight
 
-
         graph.printState();
-
+        */
     }
+
 
     /**
      * @return the ordered sequence of states/actions/rewards that
@@ -107,15 +106,55 @@ public class Model {
 
         return 1.0; // "all those not labeled are probability 1.0 from assignment #4"
     }
+    public LinkedList<String> getNeighbors(String currState){
+        LinkedList<String> edges = new LinkedList<String>();
+        if(currState.equals("State 1: RU 8p")){
+            edges.add("State 2: TU 10p");
+            edges.add("State 3: RU 10p");
+            edges.add("State 4: RD 10p");
+        }
+        else if(currState.equals("State 2: TU 10p")){
+            edges.add("State 5: RU 8a");
+            edges.add("State 8: RU 10a");
+        }
+        else if(currState.equals("State 3: RU 10p")){
+            edges.add("State 5: RU 8a");
+            edges.add("State 6: RD 8a");
+            edges.add("State 8: RU 10a");
+        }
+        else if(currState.equals("State 4: RD 10p")){
+            edges.add("State 6: RD 8a");
+            edges.add("State 9: RD 10a");
+        }
+        else if(currState.equals("State 5: RU 8a")){
+            edges.add("State 7: TU 10a");
+            edges.add("State 8: RU 10a");
+            edges.add("State 9: RD 10a");
+        }
+        else if(currState.equals("State 6: RD 8a")){
+            edges.add("State 9: RD 10a");
+            edges.add("State 10: 10a");
+        }
+        else if(currState.equals("State 7: TU 10a")){
+            edges.add("Final State:");
+        }
+        else if(currState.equals("State 2: TU 10p")){
+            edges.add("Final State:");
+        }
+        else if(currState.equals("State 2: TU 10p")){
+            edges.add("Final State:");
+        }
 
+        return edges;
+    }
     /**
-     * @param action we define an action of student to either be a Party, Rest or Study
+     * @param currentState we define an action of student to either be a Party, Rest or Study
      */
-    public int probabilityPickingParticular(String action, String fromState){
-        return (1/numberOfActionsThatCanBePerformed(fromState));
+    public float probabilityPickingParticular(String currentState){
+        return (1/numberOfActionsThatCanBePerformed(currentState));
     }
 
-    private int numberOfActionsThatCanBePerformed(String state) {
+    private float numberOfActionsThatCanBePerformed(String state) {
         if(state.equals("State 1: RU 8p")){
             return 3;
         }

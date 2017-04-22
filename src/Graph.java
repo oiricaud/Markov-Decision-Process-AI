@@ -17,10 +17,10 @@ public class Graph {
         costs[name - 1] = cost;
     }
 
-    public void addEdge(int sourceName, int destinationName, int weight) {
+    public void addEdge(int sourceName, int destinationName, int reward) {
         int sourceIndex = sourceName - 1;
         int destinationIndex = destinationName - 1;
-        adjacencyMatrix[sourceIndex][destinationIndex] = weight;
+        adjacencyMatrix[sourceIndex][destinationIndex] = reward;
         /*
          * In case we would have had non directional graph [ or bidirectional
          * graph with both the edges between two nodes, n1 and n2 having same
