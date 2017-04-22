@@ -12,13 +12,27 @@ public class MonteCarlo {
                     "State 7: Tired, Homework Undone 10a", "State 8: Rested, Homework Undone 10a",
                     "State 9: Rested, Homework Done 10a", "State 10: Tired, Homework Done", "Class Begins"
             };
+    private int[] rewardForStates = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
 
     MonteCarlo() {
         String currState = states[0];
-        for (int episode = 0; episode < 50; episode++) {
+        int currReward = rewardForStates[0];
+        int stateCount = 0;
+        for (int episode = 1; episode <= 50; episode++) {
             System.out.print("Episode " + episode + " ");
-            int currReward = beginEpisode(currState);
-            System.out.println(currReward + "\n");
+            int reward = beginEpisode(currState);
+
+            if (currReward < reward) {
+                currReward = reward;
+
+                if (rewardForStates[stateCount] < currReward) {
+                    rewardForStates[stateCount] = currReward;
+                } else {
+                    stateCount++;
+                }
+            }
+            System.out.println("Reward for episode " + episode + " is: " + currReward + "\n");
         }
     }
 
@@ -38,23 +52,20 @@ public class MonteCarlo {
                 // Obtain probabilities for each neighbor
                 float probability = model.probabilityPickingParticular(tempState);
                 // Check if we have reached a terminal state, if so end
-                if (tempState.equals("State 7: Tired, Homework Undone 10a") || tempState.equals("State 8: Rested, Homework Undone 10a")
-                        || tempState.equals("State 9: Rested, Homework Done 10a") || tempState.equals("State 10: Tired, Homework Done")) {
-                    System.out.println("Sequence of Agent's experience {" + sequenceOfExpierence + "Final State: " +
-                            "Class Begins }");
-                    return reward;
+                if (model.getNeighbors(tempState).get(0).equals("Class Begins")) {
+                    System.out.println("Sequence of Agent's experience {" + sequenceOfExpierence + "}");
+                    return reward + model.getReward(tempState, model.getNeighbors(tempState).get(0));
                 }
                 // Take the neighbor with the highest probability
                 else if (currProbability < probability) {
                     currProbability = probability;
                     stateWeShouldTake = model.getNeighbors(tempState).get(neighbor);
                     sequenceOfExpierence = sequenceOfExpierence + stateWeShouldTake + ", ";
-                    System.out.println("State we should take is: " + stateWeShouldTake);
-                    System.out.println("Current probability " + currProbability);
+                    reward = reward + model.getReward(tempState, stateWeShouldTake);
                 }
             }
             tempState = stateWeShouldTake;
         }
-        return reward;
+        return 0;
     }
 }

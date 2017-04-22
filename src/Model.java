@@ -85,16 +85,59 @@ public class Model {
         return action.equals("P") ? 2 : action.equals("R") ? 0 : action.equals("S") ? -1 : -2;
     }
 
+    public int getReward(String currentNode, String nextNode) {
+        if (currentNode.equals("State 1: Rested, Homework Undone 8p") && nextNode.equals("State 2: Tired, Homework Undone 10p")) {
+            return 2;
+        } else if (currentNode.equals("State 1: Rested, Homework Undone 8p") && nextNode.equals("State 3: Rested, " +
+                "Homework Undone 10p")) {
+            return 0;
+        } else if (currentNode.equals("State 1: Rested, Homework Undone 8p") && nextNode.equals("State 4: Rested, Homework Done 10p")) {
+            return -1;
+        } else if (currentNode.equals("State 2: Tired, Homework Undone 10p") && nextNode.equals("State 5: Rested, Homework Undone 8a")) {
+            return 0;
+        } else if (currentNode.equals("State 2: Tired, Homework Undone 10p") && nextNode.equals("State 8: Rested, Homework Undone 10a")) {
+            return 2;
+        } else if (currentNode.equals("State 3: Rested, Homework Undone 10p") && nextNode.equals("State 5: Rested, Homework Undone 8a")) {
+            return 0;
+        } else if (currentNode.equals("State 3: Rested, Homework Undone 10p") && nextNode.equals("State 8: Rested, Homework Undone 10a")) {
+            return 2;
+        } else if (currentNode.equals("State 3: Rested, Homework Undone 10p") && nextNode.equals("State 6: Rested, Homework Done 8a")) {
+            return -1;
+        } else if (currentNode.equals("State 4: Rested, Homework Done 10p") && nextNode.equals("State 6: Rested, Homework Done 8a")) {
+            return 0;
+        } else if (currentNode.equals("State 4: Rested, Homework Done 10p") && nextNode.equals("State 9: Rested, Homework Done 10a")) {
+            return 2;
+        } else if (currentNode.equals("State 5: Rested, Homework Undone 8a") && nextNode.equals("State 7: Tired, Homework Undone 10a")) {
+            return 2;
+        } else if (currentNode.equals("State 5: Rested, Homework Undone 8a") && nextNode.equals("State 8: Rested, Homework Undone 10a")) {
+            return 0;
+        } else if (currentNode.equals("State 5: Rested, Homework Undone 8a") && nextNode.equals("State 9: Rested, Homework Done 10a")) {
+            return -1;
+        } else if (currentNode.equals("State 6: Rested, Homework Done 8a") && nextNode.equals("State 9: Rested, Homework Done 10a")) {
+            return 0;
+        } else if (currentNode.equals("State 6: Rested, Homework Done 8a") && nextNode.equals("State 10: Tired, Homework Done")) {
+            return 2;
+        } else if (currentNode.equals("State 7: Tired, Homework Undone 10a") && nextNode.equals("Class Begins")) {
+            return -1;
+        } else if (currentNode.equals("State 8: Rested, Homework Undone 10a") && nextNode.equals("Class Begins")) {
+            return 0;
+        } else if (currentNode.equals("State 9: Rested, Homework Done 10a") && nextNode.equals("Class Begins")) {
+            return 4;
+        } else if (currentNode.equals("State 10: Tired, Homework Done") && nextNode.equals("Class Begins")) {
+            return 3;
+        }
+        return 0;
+    }
     /**
      * @param currentState currentState of the tree
      * @param nextState the next state we are simulating
      * @return the transition probability
      */
     public double getTransitionProbabilities(String currentState, String nextState){
-        if(currentState.equals("State 3: RU 10p") && nextState.equals("State 5: RU 8a")){
+
+        if (currentState.equals("State 3: Rested, Homework Undone 10p") && nextState.equals("State 5: Rested, Homework Undone 8a")) {
             return .5;
-        }
-        else if(currentState.equals("State 3: RU 10p") && nextState.equals("State 8: RU 10a")){
+        } else if (currentState.equals("State 3: Rested, Homework Undone 10p") && nextState.equals("State 8: RU 10a")) {
             return .5;
         }
         else if(currentState.equals("State 4: RD 10p") && nextState.equals("State 6: RD 8a")){
@@ -106,43 +149,38 @@ public class Model {
 
         return 1.0; // "all those not labeled are probability 1.0 from assignment #4"
     }
+
     public LinkedList<String> getNeighbors(String currState){
         LinkedList<String> edges = new LinkedList<String>();
-        if(currState.equals("State 1: RU 8p")){
-            edges.add("State 2: TU 10p");
-            edges.add("State 3: RU 10p");
-            edges.add("State 4: RD 10p");
-        }
-        else if(currState.equals("State 2: TU 10p")){
-            edges.add("State 5: RU 8a");
-            edges.add("State 8: RU 10a");
-        }
-        else if(currState.equals("State 3: RU 10p")){
-            edges.add("State 5: RU 8a");
-            edges.add("State 6: RD 8a");
-            edges.add("State 8: RU 10a");
-        }
-        else if(currState.equals("State 4: RD 10p")){
-            edges.add("State 6: RD 8a");
-            edges.add("State 9: RD 10a");
-        }
-        else if(currState.equals("State 5: RU 8a")){
-            edges.add("State 7: TU 10a");
-            edges.add("State 8: RU 10a");
-            edges.add("State 9: RD 10a");
-        }
-        else if(currState.equals("State 6: RD 8a")){
-            edges.add("State 9: RD 10a");
-            edges.add("State 10: 10a");
-        }
-        else if(currState.equals("State 7: TU 10a")){
-            edges.add("Final State:");
-        } else if (currState.equals("State 8: RU 10a")) {
-            edges.add("Final State:");
-        } else if (currState.equals("State 9: RD 10a")) {
-            edges.add("Final State:");
-        } else if (currState.equals("State 10: 10a")) {
-            edges.add("Final State:");
+        if (currState.equals("State 1: Rested, Homework Undone 8p")) {
+            edges.add("State 2: Tired, Homework Undone 10p");
+            edges.add("State 3: Rested, Homework Undone 10p");
+            edges.add("State 4: Rested, Homework Done 10p");
+        } else if (currState.equals("State 2: Tired, Homework Undone 10p")) {
+            edges.add("State 5: Rested, Homework Undone 8a");
+            edges.add("State 8: Rested, Homework Undone 10a");
+        } else if (currState.equals("State 3: Rested, Homework Undone 10p")) {
+            edges.add("State 5: Rested, Homework Undone 8a");
+            edges.add("State 6: Rested, Homework Done 8a");
+            edges.add("State 8: Rested, Homework Undone 10a");
+        } else if (currState.equals("State 4: Rested, Homework Done 10p")) {
+            edges.add("State 6: Rested, Homework Done 8a");
+            edges.add("State 9: Rested, Homework Done 10a");
+        } else if (currState.equals("State 5: Rested, Homework Undone 8a")) {
+            edges.add("State 7: Tired, Homework Undone 10a");
+            edges.add("State 8: Rested, Homework Undone 10a");
+            edges.add("State 9: Rested, Homework Done 10a");
+        } else if (currState.equals("State 6: Rested, Homework Done 8a")) {
+            edges.add("State 9: Rested, Homework Done 10a");
+            edges.add("State 10: Tired, Homework Done");
+        } else if (currState.equals("State 7: Tired, Homework Undone 10a")) {
+            edges.add("Class Begins");
+        } else if (currState.equals("State 8: Rested, Homework Undone 10a")) {
+            edges.add("Class Begins");
+        } else if (currState.equals("State 9: Rested, Homework Done 10a")) {
+            edges.add("Class Begins");
+        } else if (currState.equals("State 10: Tired, Homework Done")) {
+            edges.add("Class Begins");
         }
 
         return edges;
@@ -154,35 +192,26 @@ public class Model {
         return (1/numberOfActionsThatCanBePerformed(currentState));
     }
 
-    private float numberOfActionsThatCanBePerformed(String state) {
-        if(state.equals("State 1: RU 8p")){
+    public float numberOfActionsThatCanBePerformed(String state) {
+        if (state.equals("State 1: Rested, Homework Undone 8p")) {
             return 3;
-        }
-        if(state.equals("State 2: TU 10p")){
+        } else if (state.equals("State 2: Tired, Homework Undone 10p")) {
             return 2;
-        }
-        if(state.equals("State 3: RU 10p")){
+        } else if (state.equals("State 3: Rested, Homework Undone 10p")) {
             return 3;
-        }
-        if(state.equals("State 4: RD 10p")){
+        } else if (state.equals("State 4: Rested, Homework Done 10p")) {
             return 3;
-        }
-        if(state.equals("State 5: RU 8a")){
+        } else if (state.equals("State 5: Rested, Homework Undone 8a")) {
             return 3;
-        }
-        if(state.equals("State 6: RD 8a")){
+        } else if (state.equals("State 6: Rested, Homework Done 8a")) {
             return 2;
-        }
-        if(state.equals("State 7: TU 10a")){
+        } else if (state.equals("State 7: Tired, Homework Undone 10a")) {
             return -1;
-        }
-        if(state.equals("State 8: RU 10a")){
+        } else if (state.equals("State 8: Rested, Homework Undone 10a")) {
             return 0;
-        }
-        if(state.equals("State 9: RD 10a")){
+        } else if (state.equals("State 9: Rested, Homework Done 10a")) {
             return 4;
-        }
-        if(state.equals("State 10: 10a")){
+        } else if (state.equals("State 10: Tired, Homework Done")) {
             return 3;
         }
         return -1;
