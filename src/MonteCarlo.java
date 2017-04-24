@@ -23,7 +23,7 @@ public class MonteCarlo {
         buildNeighbors();
         LinkedList<State> currReward = new LinkedList<State>();
         State currState = states[0];
-        for (int episode = 1; episode <= 1; episode++) {
+        for (int episode = 1; episode <= 50; episode++) {
             System.out.print("Episode " + episode + " ");
             currReward = beginEpisode(currState);
             if (currReward != null) {
@@ -253,16 +253,13 @@ public class MonteCarlo {
         }
         // NODE = 8
         // S8 -> S10
-        else if ((currentState == states[8]) && ((actionValue == -1 || actionValue == 0 || actionValue == 2))) {
+        else if ((currentState == states[8]) && ((actionValue == -1 || actionValue == 0 || actionValue == 4)) || (actionValue == 3)) {
             currentState = states[10];
             currentState.setTotalScore(actionValue);
         }
         // NODE = 9
         // S9 -> S10
-        else if ((currentState == states[9]) && ((actionValue == 2))) {
-            currentState = states[10];
-            currentState.setTotalScore(actionValue);
-        } else if (currentState == states[10]) {
+        else if (currentState == states[10]) {
             System.out.println("stop");
         }
         return currentState;
