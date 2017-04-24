@@ -22,9 +22,10 @@ public class MonteCarlo {
 
         buildNeighbors();
         LinkedList<State> currReward = new LinkedList<State>();
+        State currState = states[0];
         for (int episode = 1; episode <= 1; episode++) {
             System.out.print("Episode " + episode + " ");
-            currReward = beginEpisode(states);
+            currReward = beginEpisode(currState);
             if (currReward != null) {
                 System.out.println("Reward for episode " + episode + " is: " + currReward.getFirst().getTotalScore() + "\n");
             }
@@ -90,8 +91,8 @@ public class MonteCarlo {
     /**
      * @param states recursively keep calling this method until currState has reached the final state
      */
-    private LinkedList<State> beginEpisode(State[] states) {
-        State currentState = states[0];
+    private LinkedList<State> beginEpisode(State currState) {
+        State currentState = currState;
         //  while (currentState.isTerminal() == false) {
             if (currentState.isLeaf()) { // Is it a terminal state?
                 if (currentState.getNumberOfVisits() == 0) {
@@ -124,36 +125,44 @@ public class MonteCarlo {
     private int rollOut(State state) {
         State currentState = state;
         int currentActionValue = 0;
+        int rewardValue = 0;
         // Loop until we find the terminal state, class begins
         while (currentState.isTerminal() == false) {
-            if (currentState.isTerminal()) {
+            System.out.println("currentState: " + currentState.getNode());
+            System.out.println("currentScore: " + currentState.getTotalScore());
+            if (currentState.isTerminal() || (currentState == states[6] || (currentState == states[7] ||
+                    (currentState == states[8] || (currentState == states[9]))))) {
+                System.out.println("finalState: " + currentState.getNode());
+                System.out.println("Reward: " + rewardValue);
                 return currentState.getTotalScore();
             } else { // Otherwise choose a random action of the current state
                 currentActionValue = chooseRandomAction(currentState);
                 currentState = simulate(currentActionValue, currentState);
-
+                rewardValue = rewardValue + currentActionValue;
             }
         }
-        return currentActionValue;
+
+        return rewardValue;
     }
 
     private State simulate(int actionValue, State currentState) {
         System.out.println("currentActionValue: " + actionValue);
-        System.out.println("currentState: " + currentState.getNode());
-        currentState.setTotalScore(actionValue);
         // HEIGHT = 0
         // NODE 0
         // S0 -> S1
         if ((currentState == states[0] && (actionValue == 2))) {           // PARTY
             currentState = states[1];
+            currentState.setTotalScore(actionValue);
         }
         // S0 -> S2
         else if ((currentState == states[0] && (actionValue == 0))) {           // REST
             currentState = states[2];
+            currentState.setTotalScore(actionValue);
         }
         // S0 -> S3
         else if ((currentState == states[0] && (actionValue == -1))) {           // STUDY
             currentState = states[3];
+            currentState.setTotalScore(actionValue);
         }
 
         // HEIGHT = 1
@@ -161,82 +170,98 @@ public class MonteCarlo {
         // S1 -> S4
         else if ((currentState == states[1] && (actionValue == 2))) {           // PARTY
             currentState = states[4];
+            currentState.setTotalScore(actionValue);
         }
         // NODE = 1
         // S1 -> S7
         else if ((currentState == states[1] && (actionValue == 0))) {           // REST
             currentState = states[7];
+            currentState.setTotalScore(actionValue);
         }
         // NODE = 2
         // S2 -> S4
         else if ((currentState == states[2] && (actionValue == 0))) {           // REST
             currentState = states[4];
+            currentState.setTotalScore(actionValue);
         }
         // NODE = 2
         // S2 -> S7
         else if ((currentState == states[2] && (actionValue == 2))) {           // PARTY
             currentState = states[7];
+            currentState.setTotalScore(actionValue);
         }
         // NODE = 2
         // S2 -> S5
         else if ((currentState == states[2] && (actionValue == -1))) {           // STUDY
             currentState = states[5];
+            currentState.setTotalScore(actionValue);
         }
         // NODE = 3
         // S3 -> S5
         else if ((currentState == states[3] && (actionValue == 0))) {           // REST
             currentState = states[5];
+            currentState.setTotalScore(actionValue);
         }
         // NODE = 3
         // S3 -> S9
         else if ((currentState == states[3] && (actionValue == 2))) {           // PARTY
             currentState = states[9];
+            currentState.setTotalScore(actionValue);
         }
 // HEIGHT = 2
         // NODE = 4
         // S4 -> S6
         else if ((currentState == states[4] && (actionValue == 2))) {           // PARTY
             currentState = states[6];
+            currentState.setTotalScore(actionValue);
         }
         // NODE = 4
         // S4 -> S7
         else if ((currentState == states[4] && (actionValue == 0))) {           // REST
             currentState = states[7];
+            currentState.setTotalScore(actionValue);
         }
         // NODE = 4
         // S4 -> S8
         else if ((currentState == states[4] && (actionValue == -1))) {           // STUDY
             currentState = states[8];
+            currentState.setTotalScore(actionValue);
         }
         // NODE = 5
         // S5 -> S9
         else if ((currentState == states[5] && (actionValue == 0))) {           // REST
             currentState = states[8];
+            currentState.setTotalScore(actionValue);
         }
         // NODE = 5
         // S5 -> S10
         else if ((currentState == states[5] && (actionValue == 2))) {           // PARTY
             currentState = states[9];
+            currentState.setTotalScore(actionValue);
         }
         // NODE = 6
         // S6 -> S10
-        else if ((currentState == states[6])) {
+        else if ((currentState == states[6]) && (actionValue == 2)) {
             currentState = states[10];
+            currentState.setTotalScore(actionValue);
         }
         // NODE = 7
         // S7 -> S10
-        else if ((currentState == states[7])) {
+        else if ((currentState == states[7]) && ((actionValue == 2 || actionValue == 0))) {
             currentState = states[10];
+            currentState.setTotalScore(actionValue);
         }
         // NODE = 8
         // S8 -> S10
-        else if ((currentState == states[8])) {
+        else if ((currentState == states[8]) && ((actionValue == -1 || actionValue == 0 || actionValue == 2))) {
             currentState = states[10];
+            currentState.setTotalScore(actionValue);
         }
         // NODE = 9
         // S9 -> S10
-        else if ((currentState == states[9])) {
+        else if ((currentState == states[9]) && ((actionValue == 2))) {
             currentState = states[10];
+            currentState.setTotalScore(actionValue);
         } else if (currentState == states[10]) {
             System.out.println("stop");
         }

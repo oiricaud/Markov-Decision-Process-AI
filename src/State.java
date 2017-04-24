@@ -62,21 +62,18 @@ class State {
             actions.add(0, 0);
             actions.add(1, 0);
             actions.add(2, 0);
-            setTerminal(true);
             setLeaf(false);
         }
         if (node == 8) { // Any actions results into the same value
             actions.add(0, 4);
             actions.add(1, 4);
             actions.add(2, 4);
-            setTerminal(true);
             setLeaf(false);
         }
         if (node == 9) { // Any actions results into the same value
             actions.add(0, 3);
             actions.add(1, 3);
             actions.add(2, 3);
-            setTerminal(true);
             setLeaf(false);
         }
         // Terminal state
