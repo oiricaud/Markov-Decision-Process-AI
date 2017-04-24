@@ -1,7 +1,7 @@
 import java.util.LinkedList;
 
 /**
- * Created by oscarricaud on 4/23/17.
+ * Created by oscarricaud on 4/18/17.
  */
 class State {
     public static int count = 0;
@@ -27,62 +27,54 @@ class State {
             actions.add(0, 2);  // Action at index 0 = Party value
             actions.add(1, 0);  // Action at index 1 = Rest value
             actions.add(2, -1); // Action at index 2 = Study value
-        }
-        if (node == 1) {
+        } else if (node == 1) {
             actions.add(0, 2);  // Party
             actions.add(1, 0);  // Rest
             //  actions.add(2, null);
-        }
-        if (node == 2) {
+        } else if (node == 2) {
             actions.add(0, 2);  // Action at index 0 = Party value
             actions.add(1, 0);  // Action at index 1 = Rest value
             actions.add(2, -1); // Action at index 2 = Study value
-        }
-        if (node == 3) {
+        } else if (node == 3) {
             actions.add(0, 2);  // Party
             actions.add(1, 0);  // Rest
-        }
-        if (node == 4) {
+        } else if (node == 4) {
             actions.add(0, 2);  // Action at index 0 = Party value
             actions.add(1, 0);  // Action at index 1 = Rest value
             actions.add(2, -1); // Action at index 2 = Study value
-        }
-        if (node == 5) {
+        } else if (node == 5) {
             actions.add(0, 2);  // Party
             actions.add(1, 0);  // Rest
             actions.add(2, null);
-        }
-        if (node == 6) { // Any actions results into the same value
+        } else if (node == 6) { // Any actions results into the same value
             actions.add(0, -1);
             actions.add(1, -1);
             actions.add(2, -1);
             setLeaf(false);
-        }
-        if (node == 7) { // Any actions results into the same value
+        } else if (node == 7) { // Any actions results into the same value
             actions.add(0, 0);
             actions.add(1, 0);
             actions.add(2, 0);
             setLeaf(false);
-        }
-        if (node == 8) { // Any actions results into the same value
+        } else if (node == 8) { // Any actions results into the same value
             actions.add(0, 4);
             actions.add(1, 4);
             actions.add(2, 4);
             setLeaf(false);
-        }
-        if (node == 9) { // Any actions results into the same value
+        } else if (node == 9) { // Any actions results into the same value
             actions.add(0, 3);
             actions.add(1, 3);
             actions.add(2, 3);
             setLeaf(false);
         }
         // Terminal state
-        if (node == 10) { // Final State, Class has started
+        else if (node == 10) { // Final State, Class has started
             actions.add(0, 0);
             actions.add(1, 0);
             actions.add(2, 0);
-            setTerminal(true);
             setLeaf(false);
+        } else if (node == 11) {
+            setTerminal(true);
         }
     }
 
@@ -121,6 +113,7 @@ class State {
         }
         return neighbors;
     }
+
 
     void setNeighbors(LinkedList<State> neighbors) {
         this.neighbors = neighbors;

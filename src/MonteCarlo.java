@@ -3,10 +3,10 @@ import java.util.Random;
 
 /**
  *
- * Created by oscarricaud on 4/21/17.
+ * Created by oscarricaud on 4/18/17.
  */
 public class MonteCarlo {
-    private LinkedList<State> tree = new LinkedList<State>();
+    private LinkedList<State> path = new LinkedList<State>();
     private State[] states = new State[]
             {
                     new State(0, "Student is Rested, Homework is Undone. Current time 8pm", 0),
@@ -19,30 +19,32 @@ public class MonteCarlo {
                     new State(7, "Student is Rested, Homework is Undone. Current time 10am", 0),
                     new State(8, "Student is Rested, Homework is Done. Current time 10am", 0),
                     new State(9, "Student is Tired, Homework is Done. Current time 10am", 0),
-                    new State(10, "Class Begins. Current time 11am", 0)
+                    new State(10, "Class Begins. Current time 11am", 0),
+                    new State(11, "Final State", 0)
             };
 
     MonteCarlo() {
 
         buildNeighbors();
-        LinkedList<State> currReward = new LinkedList<State>();
         State currState = states[0];
-        for (int episode = 1; episode <= 1; episode++) {
+        // Do 50 simulations of the actions a college student can take, party, rest or study.
+        for (int episode = 1; episode <= 50; episode++) {
             System.out.print("Episode " + episode + " ");
             State map = beginEpisode(currState);
             System.out.println("map " + map.getTotalScore());
-            // if (currReward != null) {
-            //     System.out.println("Reward for episode " + episode + " is: " + tree.getFirst().getTotalScore() +
-            // "\n");
-            // }
-
+            // store rewards here
+            // update currState
         }
-        for (int i = 0; i < tree.size(); i++) {
-            System.out.println("Tree " + tree.get(i).getTotalScore());
+        // Print the path for each
+        for (int i = 0; i < path.size(); i++) {
+            System.out.println("Tree " + path.get(i).getTotalScore());
         }
 
     }
 
+    /**
+     * Add the neighbors for each state accordingly to the given diagram @see README.md
+     */
     private void buildNeighbors() {
         // Add all neighbors for each state
         for (int i = 0; i < states.length; i++) {
@@ -100,43 +102,60 @@ public class MonteCarlo {
     }
 
     /**
-     * @param currState current state we are in
+     * @param startingState starting at states[0] = College student is resting and homework is undone @see README.md.
      */
-    private State beginEpisode(State currState) {
-        State currentState = currState;
-        //  while (currentState.isTerminal() == false) {
-            if (currentState.isLeaf()) { // Is it a terminal state?
-                if (currentState.getNumberOfVisits() == 0) {
-                    System.out.println("        Node has NOT been visited before");
-                    rollOut(currentState);
-                } else { // Node has been visited before
-                    System.out.println("        Node has been visited before");
-                    for (int action = 0; action < currentState.getNeighbors().size(); action++) {
-                        tree.add(currentState.getNeighbors().get(action));
+    private State beginEpisode(State startingState) {
+        State currentState = startingState;
+        if (currentState.isLeaf()) { // Is it a leaf state?
+            if (currentState.getNumberOfVisits() == 0) {
+                System.out.println("\t \t \t Node has NOT been visited before");
+                rollOut(currentState);      // Get the # of all possible actions for currentState.
+                // Then at random choose one of these states.
+            } else {
+                System.out.println("\t \t \t Node has been visited before");
+                // Take the best option with the highest reward, apply 'greedy search'
+                // Then update the currentState
+                int tempReward = 0;
+                for (int action = 0; action < currentState.getNeighbors().size(); action++) {
+                    if (tempReward < currentState.getNeighbors().get(action).getTotalScore()) {
+                        tempReward = currentState.getNeighbors().get(action).getTotalScore();
                     }
-                    currentState = tree.getFirst();
-                    rollOut(currentState);
+                    path.add(currentState.getNeighbors().get(action));
                 }
-            } else { // Current state is not a terminal state, make the current node =  random child node
-                currentState = chooseRandomState(currentState);
+                currentState = path.getFirst();
+                rollOut(currentState);
             }
+        } else { // Current state is not a leaf, make the current node = random child node
+            currentState = chooseRandomState(currentState);
+        }
         return currentState;
     }
 
+    /**
+     * @param currentState The current state we are in @see README.md.
+     * @return At random a neighbor state with the probability of 1 / # of neighbors from currentState.
+     */
     private State chooseRandomState(State currentState) {
-        // traverse through all neighbors of current node
-
-        int bound = currentState.getNeighbors().size();
-        State randomState = randomState(bound, currentState.getNeighbors());
-        return randomState;
+        int bound = currentState.getNeighbors().size(); // Set the max bound
+        Random r = new Random();
+        int low = 0;
+        int result = r.nextInt(bound - low) + low;
+        return currentState.getNeighbors().get(result);
     }
 
+    /**
+     * Roll out! Roll out! Roll out! Roll out!
+     * I got my twin glock
+     * @param state from the state we are rolling out until we reach a terminal state. Update the total values for each
+     *              state.
+     * @return the reward value for a simulation
+     */
     private int rollOut(State state) {
         State currentState = state;
         int currentActionValue = 0;
         int rewardValue = 0;
-        // Loop until we find the terminal state, class begins
-        while (currentState.isTerminal() == false) {
+        // Loop until we find the terminal state.
+        while (!currentState.isTerminal()) {
             System.out.println("\t State: " + currentState.getNode() + ", " + currentState.getStateName());
             System.out.println("\t \t \t reward: " + currentState.getTotalScore());
 
@@ -155,6 +174,13 @@ public class MonteCarlo {
         return rewardValue;
     }
 
+    /**
+     * There ought to be a better way to define the relationships between states.
+     * @param actionValue is the action the student at random is taking, each state only has 3 options to choose from
+     *                    where actionValue could be 2 = party, 0 = rest, -1 = study
+     * @param currentState The current state the student is, this can range between 8pm - 11am.
+     * @return the currentState
+     */
     private State simulate(int actionValue, State currentState) {
         // HEIGHT = 0
         // NODE 0
@@ -206,7 +232,6 @@ public class MonteCarlo {
         else if ((currentState == states[3] && (actionValue == 2))) {           // PARTY
             currentState = states[9];
         }
-// HEIGHT = 2
         // NODE = 4
         // S4 -> S6
         else if ((currentState == states[4] && (actionValue == 2))) {           // PARTY
@@ -244,7 +269,7 @@ public class MonteCarlo {
         }
         // NODE = 8
         // S8 -> S10
-        else if ((currentState == states[8]) && ((actionValue == -1 || actionValue == 0 || actionValue == 4)) || (actionValue == 3)) {
+        else if ((currentState == states[8]) && ((actionValue == -1 || actionValue == 0 || actionValue == 2))) {
             currentState = states[10];
         }
         // NODE = 9
@@ -254,8 +279,17 @@ public class MonteCarlo {
         else if ((currentState == states[9]) && ((actionValue == 2))) {
             currentState = states[10];
         }
-        if (currentState == states[10]) {
-            return null;
+        if (currentState == states[8] && ((actionValue == -1))) {
+            currentState = states[11];
+        }
+        if (currentState == states[10] && ((actionValue == 0))) {
+            currentState = states[11];
+        }
+        if (currentState == states[10] && ((actionValue == 4))) {
+            currentState = states[11];
+        }
+        if (currentState == states[10] && ((actionValue == 3))) {
+            currentState = states[11];
         }
         currentState.setTotalScore(actionValue);
         currentState.setStateValue(actionValue);
@@ -264,28 +298,16 @@ public class MonteCarlo {
         return currentState;
     }
 
+    /**
+     * @param currentState obtain the # of different actions you can take from the current state.
+     * @return a random action value
+     */
     private int chooseRandomAction(State currentState) {
+        Random r = new Random();
+        int low = 0;
         // At random, pick a random neighbor with given probability for each state is equal.
-        int bound = currentState.getActions().size();
-        int pickRandomAction = random(bound, currentState.getNeighbors());
-        //int actionValue = pickRandomState.getActions();
-        return pickRandomAction;
-    }
-
-    private int random(int high, LinkedList<State> neighbors) {
-        Random r = new Random();
-        int low = 0;
-        int result = r.nextInt(neighbors.size() - low) + low;
-        int probActions = r.nextInt(neighbors.get(result).getActions().size() - 1 - low) + low;
-        System.out.println("result random " + result);
-        System.out.println("probActions " + probActions);
-        return neighbors.get(result).getActions().get(probActions);
-    }
-
-    private State randomState(int bound, LinkedList<State> neighbors) {
-        Random r = new Random();
-        int low = 0;
-        int result = r.nextInt(bound - low) + low;
-        return neighbors.get(result);
+        int result = r.nextInt(currentState.getNeighbors().size() - low) + low;
+        int probActions = r.nextInt(currentState.getNeighbors().get(result).getActions().size() - 1 - low) + low;
+        return probActions;
     }
 }
