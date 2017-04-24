@@ -86,7 +86,7 @@ class State {
         }
     }
 
-    private String getStateName() {
+    String getStateName() {
         return stateName;
     }
 
@@ -103,9 +103,9 @@ class State {
     }
 
     LinkedList<State> getNeighbors() {
-        System.out.println("Neighbors for state " + node);
+        System.out.println("\t\t\t Has " + (neighbors.size()) + " neighbors. From left-> right ");
         for (State neighbor : neighbors) {
-            System.out.println("    State: " + neighbor.getNode() + ", " + neighbor.getStateName()
+            System.out.println("\t\t\t\t State: " + neighbor.getNode() + ", " + neighbor.getStateName()
                     + ". Current node value " + neighbor.getStateValue());
         }
         return neighbors;

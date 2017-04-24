@@ -9,12 +9,17 @@ public class MonteCarlo {
     LinkedList<State> tree = new LinkedList<State>();
     private State[] states = new State[]
             {
-                    new State(0, "Rested, Homework Undone 8p", 0), new State(1, "Tired, Homework Undone 10p", 0),
-                    new State(2, "Rested, Homework Undone 10p", 0), new State(3, "Rested, Homework Done 10p", 0),
-                    new State(4, "Rested, Homework Undone 8a", 0), new State(5, "Rested, Homework Done 8a", 0),
-                    new State(6, "Tired, Homework Undone 10a", 0), new State(7, "Rested, Homework Undone 10a", 0),
-                    new State(8, "Rested, Homework Done 10a", 0), new State(9, "Tired, Homework Done", 0),
-                    new State(10, "Class Begins", 0)
+                    new State(0, "Rested, Homework Undone. Current time 8pm", 0),
+                    new State(1, "Tired, Homework Undone. Current time 10pm", 0),
+                    new State(2, "Rested, Homework Undone. Current time 10pm", 0),
+                    new State(3, "Rested, Homework Done. Current time 10pm", 0),
+                    new State(4, "Rested, Homework Undone. Current time 8am", 0),
+                    new State(5, "Rested, Homework Done. Current time 8am", 0),
+                    new State(6, "Tired, Homework Undone. Current time 10am", 0),
+                    new State(7, "Rested, Homework Undone. Current time 10am", 0),
+                    new State(8, "Rested, Homework Done. Current time 10am", 0),
+                    new State(9, "Tired, Homework Done. Current time 10am", 0),
+                    new State(10, "Class Begins. Current time 11am", 0)
             };
 
 
@@ -128,12 +133,12 @@ public class MonteCarlo {
         int rewardValue = 0;
         // Loop until we find the terminal state, class begins
         while (currentState.isTerminal() == false) {
-            System.out.println("currentState: " + currentState.getNode());
-            System.out.println("currentScore: " + currentState.getTotalScore());
+            System.out.println("\t State: " + currentState.getNode() + ", Student is " + currentState.getStateName());
+            System.out.println("\t\t\t currentScore: " + currentState.getTotalScore());
             if (currentState.isTerminal() || (currentState == states[6] || (currentState == states[7] ||
                     (currentState == states[8] || (currentState == states[9]))))) {
-                System.out.println("finalState: " + currentState.getNode());
-                System.out.println("Reward: " + rewardValue);
+                System.out.println("\t \t \t finalState: " + currentState.getNode());
+                System.out.println("\t \t \t Reward: " + rewardValue);
                 return currentState.getTotalScore();
             } else { // Otherwise choose a random action of the current state
                 currentActionValue = chooseRandomAction(currentState);
@@ -146,7 +151,6 @@ public class MonteCarlo {
     }
 
     private State simulate(int actionValue, State currentState) {
-        System.out.println("currentActionValue: " + actionValue);
         // HEIGHT = 0
         // NODE 0
         // S0 -> S1
