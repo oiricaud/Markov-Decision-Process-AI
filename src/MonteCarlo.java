@@ -106,6 +106,7 @@ public class MonteCarlo {
      */
     private State beginEpisode(State startingState) {
         State currentState = startingState;
+        int highestReward = 0;
         if (currentState.isLeaf()) { // Is it a leaf state?
             if (currentState.getNumberOfVisits() == 0) {
                 System.out.println("\t \t \t Node has NOT been visited before");
@@ -123,11 +124,13 @@ public class MonteCarlo {
                     path.add(currentState.getNeighbors().get(action));
                 }
                 currentState = path.getFirst();
-                rollOut(currentState);
+                highestReward = rollOut(currentState);
+
             }
         } else { // Current state is not a leaf, make the current node = random child node
             currentState = chooseRandomState(currentState);
         }
+        System.out.println("Highest Reward " + highestReward);
         return currentState;
     }
 
@@ -152,22 +155,26 @@ public class MonteCarlo {
      */
     private int rollOut(State state) {
         State currentState = state;
-        int currentActionValue = 0;
+        int randomActionValue = 0;
         int rewardValue = 0;
+        int highestReward = 0;
         // Loop until we find the terminal state.
         while (!currentState.isTerminal()) {
-            System.out.println("\t State: " + currentState.getNode() + ", " + currentState.getStateName());
-            System.out.println("\t \t \t reward: " + currentState.getTotalScore());
-
+            System.out.println("\t Current State: " + currentState.getNode() + ", " + currentState.getStateName());
+            System.out.println("\t \t \t Current State Reward: " + highestReward);
             if (currentState.isTerminal() || (currentState == states[6] || (currentState == states[7] ||
                     (currentState == states[8] || (currentState == states[9]))))) {
                 System.out.println("\t \t \t finalState: " + currentState.getNode());
                 System.out.println("\t \t \t Reward: " + rewardValue);
+                System.out.println("\t \t \t finalStateValue: " + currentState.getStateValue());
                 return currentState.getTotalScore();
             } else { // Otherwise choose a random action of the current state
-                currentActionValue = chooseRandomAction(currentState);
-                currentState = simulate(currentActionValue, currentState);
-                rewardValue = rewardValue + currentActionValue;
+                randomActionValue = chooseRandomAction(currentState); // Ranges between 1 - 3 actions
+                State weAreAdvancingTo = currentState.getNeighbors().get(randomActionValue);
+                highestReward = simulate(randomActionValue, weAreAdvancingTo);
+
+                rewardValue = currentState.getStateValue();
+                currentState = weAreAdvancingTo;
             }
         }
 
@@ -178,124 +185,123 @@ public class MonteCarlo {
      * There ought to be a better way to define the relationships between states.
      * @param actionValue is the action the student at random is taking, each state only has 3 options to choose from
      *                    where actionValue could be 2 = party, 0 = rest, -1 = study
-     * @param currentState The current state the student is, this can range between 8pm - 11am.
+     * @param state The current state the student is, this can range between 8pm - 11am.
      * @return the currentState
      */
-    private State simulate(int actionValue, State currentState) {
+    private int simulate(int actionValue, State state) {
         // HEIGHT = 0
         // NODE 0
         // S0 -> S1
-        if ((currentState == states[0] && (actionValue == 2))) {           // PARTY
-            currentState = states[1];
+        if ((state == states[0] && (actionValue == 2))) {           // PARTY
+            state = states[1];
+            state.setStateValue(2);
         }
         // S0 -> S2
-        else if ((currentState == states[0] && (actionValue == 0))) {           // REST
-            currentState = states[2];
+        else if ((state == states[0] && (actionValue == 0))) {           // REST
+            state = states[2];
+            state.setStateValue(0);
         }
         // S0 -> S3
-        else if ((currentState == states[0] && (actionValue == -1))) {           // STUDY
-            currentState = states[3];
+        else if ((state == states[0] && (actionValue == -1))) {           // STUDY
+            state = states[3];
         }
         // HEIGHT = 1
         // NODE = 1
         // S1 -> S4
-        else if ((currentState == states[1] && (actionValue == 2))) {           // PARTY
-            currentState = states[4];
+        else if ((state == states[1] && (actionValue == 2))) {           // PARTY
+            state = states[4];
         }
         // NODE = 1
         // S1 -> S7
-        else if ((currentState == states[1] && (actionValue == 0))) {           // REST
-            currentState = states[7];
+        else if ((state == states[1] && (actionValue == 0))) {           // REST
+            state = states[7];
         }
         // NODE = 2
         // S2 -> S4
-        else if ((currentState == states[2] && (actionValue == 0))) {           // REST
-            currentState = states[4];
+        else if ((state == states[2] && (actionValue == 0))) {           // REST
+            state = states[4];
         }
         // NODE = 2
         // S2 -> S7
-        else if ((currentState == states[2] && (actionValue == 2))) {           // PARTY
-            currentState = states[7];
+        else if ((state == states[2] && (actionValue == 2))) {           // PARTY
+            state = states[7];
         }
         // NODE = 2
         // S2 -> S5
-        else if ((currentState == states[2] && (actionValue == -1))) {           // STUDY
-            currentState = states[5];
+        else if ((state == states[2] && (actionValue == -1))) {           // STUDY
+            state = states[5];
         }
         // NODE = 3
         // S3 -> S5
-        else if ((currentState == states[3] && (actionValue == 0))) {           // REST
-            currentState = states[5];
+        else if ((state == states[3] && (actionValue == 0))) {           // REST
+            state = states[5];
         }
         // NODE = 3
         // S3 -> S9
-        else if ((currentState == states[3] && (actionValue == 2))) {           // PARTY
-            currentState = states[9];
+        else if ((state == states[3] && (actionValue == 2))) {           // PARTY
+            state = states[9];
         }
         // NODE = 4
         // S4 -> S6
-        else if ((currentState == states[4] && (actionValue == 2))) {           // PARTY
-            currentState = states[6];
+        else if ((state == states[4] && (actionValue == 2))) {           // PARTY
+            state = states[6];
         }
         // NODE = 4
         // S4 -> S7
-        else if ((currentState == states[4] && (actionValue == 0))) {           // REST
-            currentState = states[7];
+        else if ((state == states[4] && (actionValue == 0))) {           // REST
+            state = states[7];
         }
         // NODE = 4
         // S4 -> S8
-        else if ((currentState == states[4] && (actionValue == -1))) {           // STUDY
-            currentState = states[8];
+        else if ((state == states[4] && (actionValue == -1))) {           // STUDY
+            state = states[8];
         }
         // NODE = 5
         // S5 -> S9
-        else if ((currentState == states[5] && (actionValue == 0))) {           // REST
-            currentState = states[8];
+        else if ((state == states[5] && (actionValue == 0))) {           // REST
+            state = states[8];
         }
         // NODE = 5
         // S5 -> S10
-        else if ((currentState == states[5] && (actionValue == 2))) {           // PARTY
-            currentState = states[9];
+        else if ((state == states[5] && (actionValue == 2))) {           // PARTY
+            state = states[9];
         }
         // NODE = 6
         // S6 -> S10
-        else if ((currentState == states[6]) && (actionValue == 2)) {
-            currentState = states[10];
+        else if ((state == states[6]) && (actionValue == 2)) {
+            state = states[10];
         }
         // NODE = 7
         // S7 -> S10
-        else if ((currentState == states[7]) && ((actionValue == 2 || actionValue == 0))) {
-            currentState = states[10];
+        else if ((state == states[7]) && ((actionValue == 2 || actionValue == 0))) {
+            state = states[10];
         }
         // NODE = 8
         // S8 -> S10
-        else if ((currentState == states[8]) && ((actionValue == -1 || actionValue == 0 || actionValue == 2))) {
-            currentState = states[10];
+        else if ((state == states[8]) && ((actionValue == -1 || actionValue == 0 || actionValue == 2))) {
+            state = states[10];
         }
         // NODE = 9
         // S9 -> S10
         // NODE = 8
         // S8 -> S10
-        else if ((currentState == states[9]) && ((actionValue == 2))) {
-            currentState = states[10];
+        else if ((state == states[9]) && ((actionValue == 2))) {
+            state = states[10];
+        } else if (state == states[8] && ((actionValue == -1))) {
+            state = states[11];
+        } else if (state == states[10] && ((actionValue == 0))) {
+            state = states[11];
+        } else if (state == states[10] && ((actionValue == 4))) {
+            state = states[11];
+        } else if (state == states[10] && ((actionValue == 3))) {
+            state = states[11];
+
         }
-        if (currentState == states[8] && ((actionValue == -1))) {
-            currentState = states[11];
-        }
-        if (currentState == states[10] && ((actionValue == 0))) {
-            currentState = states[11];
-        }
-        if (currentState == states[10] && ((actionValue == 4))) {
-            currentState = states[11];
-        }
-        if (currentState == states[10] && ((actionValue == 3))) {
-            currentState = states[11];
-        }
-        currentState.setTotalScore(actionValue);
-        currentState.setStateValue(actionValue);
-        currentState.countVisit(1);
-        System.out.println("\t \t \t Student decides to " + currentState.whatActionIsIt(actionValue));
-        return currentState;
+        state.setTotalScore(actionValue);
+        state.countVisit(1);
+
+        System.out.println("\t \t \t Student decides to " + state.whatActionIsIt(actionValue));
+        return actionValue;
     }
 
     /**

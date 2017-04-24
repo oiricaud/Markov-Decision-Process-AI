@@ -45,7 +45,6 @@ class State {
         } else if (node == 5) {
             actions.add(0, 2);  // Party
             actions.add(1, 0);  // Rest
-            actions.add(2, null);
         } else if (node == 6) { // Any actions results into the same value
             actions.add(0, -1);
             actions.add(1, -1);
@@ -89,6 +88,7 @@ class State {
         }
         return "undefined action";
     }
+
     String getStateName() {
         return stateName;
     }
@@ -97,7 +97,7 @@ class State {
         this.stateName = stateName;
     }
 
-    private int getStateValue() {
+    int getStateValue() {
         return stateValue;
     }
 
@@ -106,17 +106,20 @@ class State {
     }
 
     LinkedList<State> getNeighbors() {
+        return neighbors;
+    }
+
+    void setNeighbors(LinkedList<State> neighbors) {
+        this.neighbors = neighbors;
+    }
+
+    LinkedList<State> printNeighbors() {
         System.out.println("\t\t\t Has " + (neighbors.size()) + " different actions it can choose from.");
         for (State neighbor : neighbors) {
             System.out.println("\t\t\t\t State: " + neighbor.getNode() + ", " + neighbor.getStateName()
                     + ". Current state value " + neighbor.getStateValue());
         }
         return neighbors;
-    }
-
-
-    void setNeighbors(LinkedList<State> neighbors) {
-        this.neighbors = neighbors;
     }
 
     int getNode() {
