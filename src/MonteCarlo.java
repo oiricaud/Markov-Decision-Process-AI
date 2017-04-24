@@ -6,7 +6,7 @@ import java.util.Random;
  * Created by oscarricaud on 4/21/17.
  */
 public class MonteCarlo {
-    LinkedList<State> tree = new LinkedList<State>();
+    private LinkedList<State> tree = new LinkedList<State>();
     private State[] states = new State[]
             {
                     new State(0, "Student is Rested, Homework is Undone. Current time 8pm", 0),
@@ -29,10 +29,13 @@ public class MonteCarlo {
         State currState = states[0];
         for (int episode = 1; episode <= 1; episode++) {
             System.out.print("Episode " + episode + " ");
-            currReward = beginEpisode(currState);
-            if (currReward != null) {
-                System.out.println("Reward for episode " + episode + " is: " + currReward.getFirst().getTotalScore() + "\n");
-            }
+            State map = beginEpisode(currState);
+            System.out.println("map " + map.getTotalScore());
+            // if (currReward != null) {
+            //     System.out.println("Reward for episode " + episode + " is: " + tree.getFirst().getTotalScore() +
+            // "\n");
+            // }
+
         }
         for (int i = 0; i < tree.size(); i++) {
             System.out.println("Tree " + tree.get(i).getTotalScore());
@@ -99,7 +102,7 @@ public class MonteCarlo {
     /**
      * @param currState current state we are in
      */
-    private LinkedList<State> beginEpisode(State currState) {
+    private State beginEpisode(State currState) {
         State currentState = currState;
         //  while (currentState.isTerminal() == false) {
             if (currentState.isLeaf()) { // Is it a terminal state?
@@ -117,7 +120,7 @@ public class MonteCarlo {
             } else { // Current state is not a terminal state, make the current node =  random child node
                 currentState = chooseRandomState(currentState);
             }
-        return null;
+        return currentState;
     }
 
     private State chooseRandomState(State currentState) {
@@ -136,6 +139,7 @@ public class MonteCarlo {
         while (currentState.isTerminal() == false) {
             System.out.println("\t State: " + currentState.getNode() + ", " + currentState.getStateName());
             System.out.println("\t \t \t reward: " + currentState.getTotalScore());
+
             if (currentState.isTerminal() || (currentState == states[6] || (currentState == states[7] ||
                     (currentState == states[8] || (currentState == states[9]))))) {
                 System.out.println("\t \t \t finalState: " + currentState.getNode());
@@ -250,6 +254,9 @@ public class MonteCarlo {
         else if ((currentState == states[9]) && ((actionValue == 2))) {
             currentState = states[10];
         }
+        if (currentState == states[10]) {
+            return null;
+        }
         currentState.setTotalScore(actionValue);
         currentState.setStateValue(actionValue);
         currentState.countVisit(1);
@@ -268,10 +275,11 @@ public class MonteCarlo {
     private int random(int high, LinkedList<State> neighbors) {
         Random r = new Random();
         int low = 0;
-        int result = r.nextInt(high - low) + low;
-        int numberOfActionsWeCanTake = neighbors.get(result).getActions().size();
-        int randomAction = r.nextInt(numberOfActionsWeCanTake - low) + low;
-        return neighbors.get(result).getActions().get(randomAction);
+        int result = r.nextInt(neighbors.size() - low) + low;
+        int probActions = r.nextInt(neighbors.get(result).getActions().size() - 1 - low) + low;
+        System.out.println("result random " + result);
+        System.out.println("probActions " + probActions);
+        return neighbors.get(result).getActions().get(probActions);
     }
 
     private State randomState(int bound, LinkedList<State> neighbors) {

@@ -31,7 +31,7 @@ class State {
         if (node == 1) {
             actions.add(0, 2);  // Party
             actions.add(1, 0);  // Rest
-            //actions.add(2, null);
+            //  actions.add(2, null);
         }
         if (node == 2) {
             actions.add(0, 2);  // Action at index 0 = Party value
@@ -41,7 +41,6 @@ class State {
         if (node == 3) {
             actions.add(0, 2);  // Party
             actions.add(1, 0);  // Rest
-            //actions.add(2, null);
         }
         if (node == 4) {
             actions.add(0, 2);  // Action at index 0 = Party value
@@ -51,12 +50,13 @@ class State {
         if (node == 5) {
             actions.add(0, 2);  // Party
             actions.add(1, 0);  // Rest
-            //actions.add(2, null);
+            actions.add(2, null);
         }
         if (node == 6) { // Any actions results into the same value
             actions.add(0, -1);
             actions.add(1, -1);
             actions.add(2, -1);
+            setLeaf(false);
         }
         if (node == 7) { // Any actions results into the same value
             actions.add(0, 0);
@@ -78,9 +78,9 @@ class State {
         }
         // Terminal state
         if (node == 10) { // Final State, Class has started
-            actions.add(0, null);  // Party
-            actions.add(1, null);  // Rest
-            actions.add(2, null); // Study
+            actions.add(0, 0);
+            actions.add(1, 0);
+            actions.add(2, 0);
             setTerminal(true);
             setLeaf(false);
         }
