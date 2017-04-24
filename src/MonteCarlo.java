@@ -9,32 +9,35 @@ public class MonteCarlo {
     LinkedList<State> tree = new LinkedList<State>();
     private State[] states = new State[]
             {
-                    new State(0, "Rested, Homework Undone. Current time 8pm", 0),
-                    new State(1, "Tired, Homework Undone. Current time 10pm", 0),
-                    new State(2, "Rested, Homework Undone. Current time 10pm", 0),
-                    new State(3, "Rested, Homework Done. Current time 10pm", 0),
-                    new State(4, "Rested, Homework Undone. Current time 8am", 0),
-                    new State(5, "Rested, Homework Done. Current time 8am", 0),
-                    new State(6, "Tired, Homework Undone. Current time 10am", 0),
-                    new State(7, "Rested, Homework Undone. Current time 10am", 0),
-                    new State(8, "Rested, Homework Done. Current time 10am", 0),
-                    new State(9, "Tired, Homework Done. Current time 10am", 0),
+                    new State(0, "Student is Rested, Homework is Undone. Current time 8pm", 0),
+                    new State(1, "Student is Tired, Homework is Undone. Current time 10pm", 0),
+                    new State(2, "Student is Rested, Homework is Undone. Current time 10pm", 0),
+                    new State(3, "Student is Rested, Homework is Done. Current time 10pm", 0),
+                    new State(4, "Student is Rested, Homework is Undone. Current time 8am", 0),
+                    new State(5, "Student is Rested, Homework is Done. Current time 8am", 0),
+                    new State(6, "Student is Tired, Homework is Undone. Current time 10am", 0),
+                    new State(7, "Student is Rested, Homework is Undone. Current time 10am", 0),
+                    new State(8, "Student is Rested, Homework is Done. Current time 10am", 0),
+                    new State(9, "Student is Tired, Homework is Done. Current time 10am", 0),
                     new State(10, "Class Begins. Current time 11am", 0)
             };
-
 
     MonteCarlo() {
 
         buildNeighbors();
         LinkedList<State> currReward = new LinkedList<State>();
         State currState = states[0];
-        for (int episode = 1; episode <= 50; episode++) {
+        for (int episode = 1; episode <= 1; episode++) {
             System.out.print("Episode " + episode + " ");
             currReward = beginEpisode(currState);
             if (currReward != null) {
                 System.out.println("Reward for episode " + episode + " is: " + currReward.getFirst().getTotalScore() + "\n");
             }
         }
+        for (int i = 0; i < tree.size(); i++) {
+            System.out.println("Tree " + tree.get(i).getTotalScore());
+        }
+
     }
 
     private void buildNeighbors() {
@@ -94,7 +97,7 @@ public class MonteCarlo {
     }
 
     /**
-     * @param states recursively keep calling this method until currState has reached the final state
+     * @param currState current state we are in
      */
     private LinkedList<State> beginEpisode(State currState) {
         State currentState = currState;
@@ -114,8 +117,6 @@ public class MonteCarlo {
             } else { // Current state is not a terminal state, make the current node =  random child node
                 currentState = chooseRandomState(currentState);
             }
-        //   }
-
         return null;
     }
 
@@ -133,8 +134,8 @@ public class MonteCarlo {
         int rewardValue = 0;
         // Loop until we find the terminal state, class begins
         while (currentState.isTerminal() == false) {
-            System.out.println("\t State: " + currentState.getNode() + ", Student is " + currentState.getStateName());
-            System.out.println("\t\t\t currentScore: " + currentState.getTotalScore());
+            System.out.println("\t State: " + currentState.getNode() + ", " + currentState.getStateName());
+            System.out.println("\t \t \t reward: " + currentState.getTotalScore());
             if (currentState.isTerminal() || (currentState == states[6] || (currentState == states[7] ||
                     (currentState == states[8] || (currentState == states[9]))))) {
                 System.out.println("\t \t \t finalState: " + currentState.getNode());
@@ -156,116 +157,103 @@ public class MonteCarlo {
         // S0 -> S1
         if ((currentState == states[0] && (actionValue == 2))) {           // PARTY
             currentState = states[1];
-            currentState.setTotalScore(actionValue);
         }
         // S0 -> S2
         else if ((currentState == states[0] && (actionValue == 0))) {           // REST
             currentState = states[2];
-            currentState.setTotalScore(actionValue);
         }
         // S0 -> S3
         else if ((currentState == states[0] && (actionValue == -1))) {           // STUDY
             currentState = states[3];
-            currentState.setTotalScore(actionValue);
         }
-
         // HEIGHT = 1
         // NODE = 1
         // S1 -> S4
         else if ((currentState == states[1] && (actionValue == 2))) {           // PARTY
             currentState = states[4];
-            currentState.setTotalScore(actionValue);
         }
         // NODE = 1
         // S1 -> S7
         else if ((currentState == states[1] && (actionValue == 0))) {           // REST
             currentState = states[7];
-            currentState.setTotalScore(actionValue);
         }
         // NODE = 2
         // S2 -> S4
         else if ((currentState == states[2] && (actionValue == 0))) {           // REST
             currentState = states[4];
-            currentState.setTotalScore(actionValue);
         }
         // NODE = 2
         // S2 -> S7
         else if ((currentState == states[2] && (actionValue == 2))) {           // PARTY
             currentState = states[7];
-            currentState.setTotalScore(actionValue);
         }
         // NODE = 2
         // S2 -> S5
         else if ((currentState == states[2] && (actionValue == -1))) {           // STUDY
             currentState = states[5];
-            currentState.setTotalScore(actionValue);
         }
         // NODE = 3
         // S3 -> S5
         else if ((currentState == states[3] && (actionValue == 0))) {           // REST
             currentState = states[5];
-            currentState.setTotalScore(actionValue);
         }
         // NODE = 3
         // S3 -> S9
         else if ((currentState == states[3] && (actionValue == 2))) {           // PARTY
             currentState = states[9];
-            currentState.setTotalScore(actionValue);
         }
 // HEIGHT = 2
         // NODE = 4
         // S4 -> S6
         else if ((currentState == states[4] && (actionValue == 2))) {           // PARTY
             currentState = states[6];
-            currentState.setTotalScore(actionValue);
         }
         // NODE = 4
         // S4 -> S7
         else if ((currentState == states[4] && (actionValue == 0))) {           // REST
             currentState = states[7];
-            currentState.setTotalScore(actionValue);
         }
         // NODE = 4
         // S4 -> S8
         else if ((currentState == states[4] && (actionValue == -1))) {           // STUDY
             currentState = states[8];
-            currentState.setTotalScore(actionValue);
         }
         // NODE = 5
         // S5 -> S9
         else if ((currentState == states[5] && (actionValue == 0))) {           // REST
             currentState = states[8];
-            currentState.setTotalScore(actionValue);
         }
         // NODE = 5
         // S5 -> S10
         else if ((currentState == states[5] && (actionValue == 2))) {           // PARTY
             currentState = states[9];
-            currentState.setTotalScore(actionValue);
         }
         // NODE = 6
         // S6 -> S10
         else if ((currentState == states[6]) && (actionValue == 2)) {
             currentState = states[10];
-            currentState.setTotalScore(actionValue);
         }
         // NODE = 7
         // S7 -> S10
         else if ((currentState == states[7]) && ((actionValue == 2 || actionValue == 0))) {
             currentState = states[10];
-            currentState.setTotalScore(actionValue);
         }
         // NODE = 8
         // S8 -> S10
         else if ((currentState == states[8]) && ((actionValue == -1 || actionValue == 0 || actionValue == 4)) || (actionValue == 3)) {
             currentState = states[10];
-            currentState.setTotalScore(actionValue);
         }
         // NODE = 9
         // S9 -> S10
-        else if (currentState == states[10]) {
-            System.out.println("stop");
+        // NODE = 8
+        // S8 -> S10
+        else if ((currentState == states[9]) && ((actionValue == 2))) {
+            currentState = states[10];
         }
+        currentState.setTotalScore(actionValue);
+        currentState.setStateValue(actionValue);
+        currentState.countVisit(1);
+        System.out.println("\t \t \t Student decides to " + currentState.whatActionIsIt(actionValue));
         return currentState;
     }
 

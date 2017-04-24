@@ -4,13 +4,14 @@ import java.util.LinkedList;
  * Created by oscarricaud on 4/23/17.
  */
 class State {
+    public static int count = 0;
     private String stateName;
     private int stateValue;
     private int node;
     private LinkedList<State> neighbors;
     private boolean isLeaf;
     private int totalScore;
-    private int numberOfVisits;
+    private int numberOfVisits = 0;
     private boolean isTerminal;
     // actionsAt0 = Party, actionsAt1 = Rest, actionsAt2 = Study
     private LinkedList<Integer> actions = new LinkedList<Integer>();
@@ -20,7 +21,6 @@ class State {
         setStateValue(value);
         setNode(node);
         setTotalScore(0);
-        setNumberOfVisits(0);
         setLeaf(true);
         setTerminal(false);
         if (node == 0) {
@@ -86,6 +86,17 @@ class State {
         }
     }
 
+    public String whatActionIsIt(int actionValue) {
+        switch (actionValue) {
+            case -1:
+                return "study";
+            case 0:
+                return "rest";
+            case 2:
+                return "party";
+        }
+        return "undefined action";
+    }
     String getStateName() {
         return stateName;
     }
@@ -98,15 +109,15 @@ class State {
         return stateValue;
     }
 
-    private void setStateValue(int stateValue) {
+    void setStateValue(int stateValue) {
         this.stateValue = stateValue;
     }
 
     LinkedList<State> getNeighbors() {
-        System.out.println("\t\t\t Has " + (neighbors.size()) + " neighbors. From left-> right ");
+        System.out.println("\t\t\t Has " + (neighbors.size()) + " different actions it can choose from.");
         for (State neighbor : neighbors) {
             System.out.println("\t\t\t\t State: " + neighbor.getNode() + ", " + neighbor.getStateName()
-                    + ". Current node value " + neighbor.getStateValue());
+                    + ". Current state value " + neighbor.getStateValue());
         }
         return neighbors;
     }
@@ -140,11 +151,12 @@ class State {
     }
 
     public int getNumberOfVisits() {
-        return numberOfVisits;
+        return count;
     }
 
-    public void setNumberOfVisits(int numberOfVisits) {
+    public void countVisit(int numberOfVisits) {
         this.numberOfVisits = numberOfVisits;
+        count++;
     }
 
     public LinkedList<Integer> getActions() {
