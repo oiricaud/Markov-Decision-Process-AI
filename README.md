@@ -39,3 +39,4 @@ The gray rectangle denotes a terminal state.
 See below for the diagram of the MDP.
 
 ![alt tag](Screenshots/Diagram.png "Diagram") 
+
