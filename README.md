@@ -1,4 +1,4 @@
-# Markov-Decision-Process CS 4320: Artificial Intelligence 
+# Markov-Decision-Process: Artificial Intelligence 
 
 Objective
 ======
